@@ -1,12 +1,21 @@
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
-  //TODO: Implement HomeController
+  RxBool flag = false.obs;
+  ScrollController scrollController = ScrollController();
 
-  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
+    scrollController.addListener(() {
+      //监听滚动的距离
+      if (scrollController.position.pixels > 10) {
+        if (flag == false) flag.value = true;
+      } else if (scrollController.position.pixels < 10) {
+        if (flag == true) flag.value = false;
+      }
+    });
   }
 
   @override
@@ -18,6 +27,4 @@ class HomeController extends GetxController {
   void onClose() {
     super.onClose();
   }
-
-  void increment() => count.value++;
 }

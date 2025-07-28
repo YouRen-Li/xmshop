@@ -19,7 +19,7 @@ class CategoryView extends GetView<CategoryController> {
         children: [
           Container(
             width: Screenadapter.width(1080),
-            height: Screenadapter.heigth(600),
+            height: Screenadapter.height(600),
             color: Colors.yellow,
           )
         ],

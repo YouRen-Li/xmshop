@@ -7,7 +7,7 @@ class Screenadapter {
     return v.w;
   }
 
-  static heigth(num v) {
+  static height(num v) {
     return v.h;
   }
 
