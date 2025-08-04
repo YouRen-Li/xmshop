@@ -34,6 +34,5 @@ class TabsController extends GetxController {
 
   void setCurrentIndex(index) {
     currentIndex.value = index;
-    update();
   }
 }

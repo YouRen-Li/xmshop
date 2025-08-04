@@ -1,0 +1,9 @@
+get_cli:
+  null_safety: true
+  line_length: 80
+  
+model:
+  output_dir: lib/app/models/
+  
+api:
+  output_dir: lib/app/data/ 
