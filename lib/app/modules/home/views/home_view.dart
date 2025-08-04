@@ -117,7 +117,7 @@ class HomeView extends GetView<HomeController> {
       height: Screenadapter.height(470),
       child: Obx(
         () => Swiper(
-          itemCount: controller.categoryList.length ~/ 10, //取整
+          itemCount: (controller.categoryList.length / 10).ceil(), //向上取整
           itemBuilder: (context, index) {
             return GridView.builder(
               itemCount: 10, //一页一共多少个元素
