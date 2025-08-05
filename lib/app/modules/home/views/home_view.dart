@@ -102,7 +102,7 @@ class HomeView extends GetView<HomeController> {
   }
 
   //banner 下划线代表私有的
-  Widget _Banner() {
+  Widget _banner() {
     return SizedBox(
       width: Screenadapter.width(1080),
       height: Screenadapter.height(92),
@@ -191,6 +191,24 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
+  Widget _banner2() {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        Screenadapter.width(20),
+        0,
+        Screenadapter.width(20),
+        0,
+      ),
+      child: SizedBox(
+        height: Screenadapter.height(420),
+        child: Image.asset(
+          "assets/images/xiaomiBanner2.png",
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+
   // 内容区域
   Widget _homePage() {
     return Positioned(
@@ -200,7 +218,7 @@ class HomeView extends GetView<HomeController> {
       bottom: 0,
       child: ListView(
         controller: controller.scrollController,
-        children: [_focus(), _Banner(), _categoty()],
+        children: [_focus(), _banner(), _categoty(), _banner2()],
       ),
     );
   }
