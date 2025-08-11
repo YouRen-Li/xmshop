@@ -1,15 +1,17 @@
-import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:xmshop/app/models/category_model.dart';
 import 'package:xmshop/app/models/focus_model.dart';
+import 'package:xmshop/app/models/plist_model.dart';
 
 class HomeController extends GetxController {
   final ScrollController scrollController = ScrollController();
   //接口列表
   RxList<FocusItemModel> swiperList = <FocusItemModel>[].obs;
+  RxList<FocusItemModel> bestSellingSwiperList = <FocusItemModel>[].obs;
   RxList<CategoryItemModel> categoryList = <CategoryItemModel>[].obs;
+  RxList<PlistlItemModel> sellingPlist = <PlistlItemModel>[].obs;
 
   //浮动导航的样式
   final flag = false.obs;
@@ -20,7 +22,12 @@ class HomeController extends GetxController {
     scrollControllerListener();
     //请求接口
     getFocusData();
+    // 获取分类数据
     getCategoryData();
+    //获取热销甄选轮播图数据
+    getSellingSwiperData();
+    //获取热销甄选里面的商品数据
+    getsellingPlistData();
   }
 
   @override
@@ -54,6 +61,24 @@ class HomeController extends GetxController {
       swiperList[i].pic = "https://miapp.itying.com/${swiperList[i].pic}"
           .replaceAll("\\", '/');
     }
+  }
+
+  // 获取热销甄选里面的轮播图
+  getSellingSwiperData() async {
+    var response = await Dio().get(
+      'https://miapp.itying.com/api/focus?position=2',
+    );
+    var SellingSwiper = FocusModel.fromJson(response.data);
+    bestSellingSwiperList.value = SellingSwiper.result!;
+  }
+
+  // 获取热销甄选里面的商品数据
+  getsellingPlistData() async {
+    var response = await Dio().get(
+      'https://miapp.itying.com/api/plist?is_hot=1&pageSize=3',
+    );
+    var plist = PlistModel.fromJson(response.data);
+    sellingPlist.value = plist.result!;
   }
 
   // 获取分类

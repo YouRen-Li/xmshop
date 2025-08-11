@@ -254,43 +254,51 @@ class HomeView extends GetView<HomeController> {
                 flex: 1,
                 child: SizedBox(
                   height: Screenadapter.height(738),
-                  child: Swiper(
-                    itemBuilder: (context, index) {
-                      String picUrl =
-                          "https://www.itying.com/images/b_focus0${index + 1}.png";
-                      return Image.network(picUrl, fit: BoxFit.fill);
-                    },
-                    itemCount: 3,
-                    //自定义轮播图圆点
-                    pagination: SwiperPagination(
-                      margin: EdgeInsets.all(0.0),
-                      builder: SwiperCustomPagination(
-                        builder:
-                            (BuildContext context, SwiperPluginConfig config) {
-                              return ConstrainedBox(
-                                constraints: BoxConstraints.expand(
-                                  height: Screenadapter.height(36),
-                                ),
-                                child: Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Align(
-                                        alignment: Alignment.center,
-                                        child:
-                                            const RectSwiperPaginationBuilder(
-                                              color: Colors.black12,
-                                              activeColor: Colors.black54,
-                                            ).build(context, config),
+                  child: Obx(
+                    () => Swiper(
+                      itemBuilder: (context, index) {
+                        String picUrl =
+                            "https://miapp.itying.com/${controller.bestSellingSwiperList[index].pic}";
+                        return Image.network(
+                          picUrl.replaceAll("\\", '/'),
+                          fit: BoxFit.fill,
+                        );
+                      },
+                      itemCount: controller.bestSellingSwiperList.length,
+                      //自定义轮播图圆点
+                      pagination: SwiperPagination(
+                        margin: EdgeInsets.all(0.0),
+                        builder: SwiperCustomPagination(
+                          builder:
+                              (
+                                BuildContext context,
+                                SwiperPluginConfig config,
+                              ) {
+                                return ConstrainedBox(
+                                  constraints: BoxConstraints.expand(
+                                    height: Screenadapter.height(36),
+                                  ),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Align(
+                                          alignment: Alignment.center,
+                                          child:
+                                              const RectSwiperPaginationBuilder(
+                                                color: Colors.black12,
+                                                activeColor: Colors.black54,
+                                              ).build(context, config),
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
+                                    ],
+                                  ),
+                                );
+                              },
+                        ),
                       ),
+                      autoplay: true,
+                      loop: true,
                     ),
-                    autoplay: true,
-                    loop: true,
                   ),
                 ),
               ),
@@ -299,164 +307,74 @@ class HomeView extends GetView<HomeController> {
                 flex: 1,
                 child: SizedBox(
                   height: Screenadapter.height(738),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          color: Color.fromRGBO(246, 246, 246, 1),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 3,
-                                child: Column(
-                                  children: [
-                                    SizedBox(height: Screenadapter.height(20)),
-                                    Text(
-                                      '空气炸烤箱',
-                                      style: TextStyle(
-                                        fontSize: Screenadapter.fontsize(38),
-                                        fontWeight: FontWeight.bold,
+                  child: Obx(
+                    () => Column(
+                      children: controller.sellingPlist.asMap().entries.map((entrie) {
+                        var item=entrie.value;
+                        var index= entrie.key; //map默认是没有index key，需要转换成asmap才能获取到key
+                        var picUrl = 'https://miapp.itying.com/${item.pic}';
+                        return Expanded(
+                          flex: 1,
+                          child: Container(
+                            color: Color.fromRGBO(246, 246, 246, 1),
+                            margin: EdgeInsets.only(
+                             bottom:  index==2?0:Screenadapter.height(20),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 3,
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: Screenadapter.height(20),
                                       ),
-                                    ),
-                                    SizedBox(height: Screenadapter.height(20)),
-                                    Text(
-                                      '大容量专业炸烤',
-                                      style: TextStyle(
-                                        fontSize: Screenadapter.fontsize(28),
+                                      Text(
+                                        '${item.title}',
+                                        style: TextStyle(
+                                          fontSize: Screenadapter.fontsize(38),
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(height: Screenadapter.height(20)),
-                                    Text(
-                                      '众筹价￥749',
-                                      style: TextStyle(
-                                        fontSize: Screenadapter.fontsize(34),
+                                      SizedBox(
+                                        height: Screenadapter.height(20),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Padding(
-                                  padding: EdgeInsets.all(
-                                    Screenadapter.height(8),
+                                      Text(
+                                        '${item.subTitle}',
+                                        style: TextStyle(
+                                          fontSize: Screenadapter.fontsize(28),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: Screenadapter.height(20),
+                                      ),
+                                      Text(
+                                        '${item.price}元',
+                                        style: TextStyle(
+                                          fontSize: Screenadapter.fontsize(34),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  child: Image.network(
-                                    'https://www.itying.com/images/shouji.png',
-                                    fit: BoxFit.cover,
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(
+                                      Screenadapter.height(8),
+                                    ),
+                                    child: Image.network(
+                                      picUrl.replaceAll("\\", '/'),
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ),
-                      SizedBox(height: Screenadapter.height(20)),
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          color: Color.fromRGBO(246, 246, 246, 1),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 3,
-                                child: Column(
-                                  children: [
-                                    SizedBox(height: Screenadapter.height(20)),
-                                    Text(
-                                      '空气炸烤箱',
-                                      style: TextStyle(
-                                        fontSize: Screenadapter.fontsize(38),
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(height: Screenadapter.height(20)),
-                                    Text(
-                                      '大容量专业炸烤',
-                                      style: TextStyle(
-                                        fontSize: Screenadapter.fontsize(28),
-                                      ),
-                                    ),
-                                    SizedBox(height: Screenadapter.height(20)),
-                                    Text(
-                                      '众筹价￥749',
-                                      style: TextStyle(
-                                        fontSize: Screenadapter.fontsize(34),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Padding(
-                                  padding: EdgeInsets.all(
-                                    Screenadapter.height(8),
-                                  ),
-                                  child: Image.network(
-                                    'https://www.itying.com/images/shouji.png',
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: Screenadapter.height(20)),
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          color: Color.fromRGBO(246, 246, 246, 1),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 3,
-                                child: Column(
-                                  children: [
-                                    SizedBox(height: Screenadapter.height(20)),
-                                    Text(
-                                      '空气炸烤箱',
-                                      style: TextStyle(
-                                        fontSize: Screenadapter.fontsize(38),
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(height: Screenadapter.height(20)),
-                                    Text(
-                                      '大容量专业炸烤',
-                                      style: TextStyle(
-                                        fontSize: Screenadapter.fontsize(28),
-                                      ),
-                                    ),
-                                    SizedBox(height: Screenadapter.height(20)),
-                                    Text(
-                                      '众筹价￥749',
-                                      style: TextStyle(
-                                        fontSize: Screenadapter.fontsize(34),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Padding(
-                                  padding: EdgeInsets.all(
-                                    Screenadapter.height(8),
-                                  ),
-                                  child: Image.network(
-                                    'https://www.itying.com/images/shouji.png',
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                        );
+                      }).toList(),
+                    ),
                   ),
                 ),
               ),
