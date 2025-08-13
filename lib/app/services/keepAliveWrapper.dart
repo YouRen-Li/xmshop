@@ -16,9 +16,10 @@ class _KeepAliveWrapperState extends State<KeepAliveWrapper>
     with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return widget.child!;
   }
 
   @override
-  bool get wantKeepAlive => widget.keepAlive;  
+  bool get wantKeepAlive => widget.keepAlive;
 }

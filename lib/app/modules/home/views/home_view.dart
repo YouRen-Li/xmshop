@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:xmshop/app/services/httpsClient.dart';
 import '../controllers/home_controller.dart';
 import '../../../services/keepAliveWrapper.dart';
-import "../../../services/Screenadapter.dart";
+import "../../../services/screenAdapter.dart";
 import "../../../services/ityingFonts.dart";
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -24,32 +25,37 @@ class HomeView extends GetView<HomeController> {
                     color: Colors.white,
                   ),
             leadingWidth: controller.flag.value
-                ? Screenadapter.width(40)
-                : Screenadapter.width(140),
-            title: AnimatedContainer(
-              width: controller.flag.value
-                  ? Screenadapter.width(800)
-                  : Screenadapter.width(620),
-              height: Screenadapter.height(96),
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(230, 252, 243, 236),
-                borderRadius: BorderRadius.circular(30),
+                ? ScreenAdapter.width(40)
+                : ScreenAdapter.width(140),
+            title: InkWell(
+              child: AnimatedContainer(
+                width: controller.flag.value
+                    ? ScreenAdapter.width(800)
+                    : ScreenAdapter.width(620),
+                height: ScreenAdapter.height(96),
+                decoration: BoxDecoration(
+                  color: const Color.fromRGBO(246, 246, 246, 1),
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                duration: const Duration(milliseconds: 600),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(ScreenAdapter.width(34), 0,
+                          ScreenAdapter.width(10), 0),
+                      child: const Icon(Icons.search, color: Colors.black54),
+                    ),
+                    Text("手机",
+                        style: TextStyle(
+                            color: Colors.black54,
+                            fontSize: ScreenAdapter.fontSize(32)))
+                  ],
+                ),
               ),
-              duration: const Duration(milliseconds: 600),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(
-                        Screenadapter.width(34), 0, Screenadapter.width(10), 0),
-                    child: const Icon(Icons.search),
-                  ),
-                  Text("手机",
-                      style: TextStyle(
-                          color: Colors.black54,
-                          fontSize: Screenadapter.fontsize(32)))
-                ],
-              ),
+              onTap: () {
+                Get.toNamed("/search");
+              },
             ),
             centerTitle: true,
             backgroundColor:
@@ -77,14 +83,12 @@ class HomeView extends GetView<HomeController> {
   //轮播图
   Widget _focus() {
     return SizedBox(
-      width: Screenadapter.width(1080),
-      height: Screenadapter.height(682),
+      width: ScreenAdapter.width(1080),
+      height: ScreenAdapter.height(682),
       child: Obx(() => Swiper(
             itemBuilder: (context, index) {
-              String picUrl =
-                  "https://xiaomi.itying.com/${controller.swiperList[index].pic}";
               return Image.network(
-                picUrl.replaceAll("\\", "/"),
+                HttpsClient.replaeUri(controller.swiperList[index].pic),
                 fit: BoxFit.fill,
               );
             },
@@ -100,8 +104,8 @@ class HomeView extends GetView<HomeController> {
   //banner
   Widget _banner() {
     return SizedBox(
-      width: Screenadapter.width(1080),
-      height: Screenadapter.height(92),
+      width: ScreenAdapter.width(1080),
+      height: ScreenAdapter.height(92),
       child: Image.asset(
         "assets/images/xiaomiBanner.png",
         fit: BoxFit.cover,
@@ -112,8 +116,8 @@ class HomeView extends GetView<HomeController> {
   //顶部滑动分类
   Widget _category() {
     return SizedBox(
-      width: Screenadapter.width(1080),
-      height: Screenadapter.height(470),
+      width: ScreenAdapter.width(1080),
+      height: ScreenAdapter.height(470),
       // color: Colors.red,
       child: Obx(() => Swiper(
             itemBuilder: (context, index) {
@@ -121,28 +125,28 @@ class HomeView extends GetView<HomeController> {
                   itemCount: 10,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 5,
-                    crossAxisSpacing: Screenadapter.width(20),
-                    mainAxisSpacing: Screenadapter.height(20),
+                    crossAxisSpacing: ScreenAdapter.width(20),
+                    mainAxisSpacing: ScreenAdapter.height(20),
                   ),
                   itemBuilder: (context, i) {
-                    String picUrl =
-                        "https://xiaomi.itying.com/${controller.categoryList[index * 10 + i].pic}";
                     return Column(
                       children: [
                         Container(
                           alignment: Alignment.center,
-                          width: Screenadapter.height(140),
-                          height: Screenadapter.height(140),
-                          child: Image.network(picUrl.replaceAll("\\", "/"),
+                          width: ScreenAdapter.height(140),
+                          height: ScreenAdapter.height(140),
+                          child: Image.network(
+                              HttpsClient.replaeUri(
+                                  controller.categoryList[index * 10 + i].pic),
                               fit: BoxFit.fitHeight),
                         ),
                         Padding(
                           padding: EdgeInsets.fromLTRB(
-                              0, Screenadapter.height(4), 0, 0),
+                              0, ScreenAdapter.height(4), 0, 0),
                           child: Text(
                               "${controller.categoryList[index * 10 + i].title}",
                               style: TextStyle(
-                                  fontSize: Screenadapter.fontsize(34))),
+                                  fontSize: ScreenAdapter.fontSize(34))),
                         )
                       ],
                     );
@@ -155,7 +159,7 @@ class HomeView extends GetView<HomeController> {
                     builder: (BuildContext context, SwiperPluginConfig config) {
                   return ConstrainedBox(
                     constraints:
-                        BoxConstraints.expand(height: Screenadapter.height(20)),
+                        BoxConstraints.expand(height: ScreenAdapter.height(20)),
                     child: Row(
                       children: <Widget>[
                         Expanded(
@@ -178,16 +182,16 @@ class HomeView extends GetView<HomeController> {
   //banner
   Widget _banner2() {
     return Padding(
-      padding: EdgeInsets.fromLTRB(Screenadapter.width(20),
-          Screenadapter.height(20), Screenadapter.width(20), 0),
+      padding: EdgeInsets.fromLTRB(ScreenAdapter.width(20),
+          ScreenAdapter.height(20), ScreenAdapter.width(20), 0),
       child: Container(
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(Screenadapter.width(20)),
+            borderRadius: BorderRadius.circular(ScreenAdapter.width(20)),
             color: Colors.red,
             image: const DecorationImage(
                 fit: BoxFit.cover,
                 image: AssetImage("assets/images/xiaomiBanner2.png"))),
-        height: Screenadapter.height(420),
+        height: ScreenAdapter.height(420),
       ),
     );
   }
@@ -198,10 +202,10 @@ class HomeView extends GetView<HomeController> {
       children: [
         Padding(
             padding: EdgeInsets.fromLTRB(
-                Screenadapter.width(30),
-                Screenadapter.height(40),
-                Screenadapter.width(30),
-                Screenadapter.height(20)),
+                ScreenAdapter.width(30),
+                ScreenAdapter.height(40),
+                ScreenAdapter.width(30),
+                ScreenAdapter.height(20)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -209,27 +213,26 @@ class HomeView extends GetView<HomeController> {
                 Text("热销臻选",
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: Screenadapter.fontsize(46))),
+                        fontSize: ScreenAdapter.fontSize(46))),
                 Text("更多手机推荐 >",
-                    style: TextStyle(fontSize: Screenadapter.fontsize(38)))
+                    style: TextStyle(fontSize: ScreenAdapter.fontSize(38)))
               ],
             )),
         Padding(
-          padding: EdgeInsets.fromLTRB(Screenadapter.width(20), 0,
-              Screenadapter.width(20), Screenadapter.height(20)),
+          padding: EdgeInsets.fromLTRB(ScreenAdapter.width(20), 0,
+              ScreenAdapter.width(20), ScreenAdapter.height(20)),
           child: Row(
             children: [
               //左侧
               Expanded(
                   flex: 1,
                   child: SizedBox(
-                    height: Screenadapter.height(738),
+                    height: ScreenAdapter.height(738),
                     child: Obx(() => Swiper(
                         itemBuilder: (context, index) {
-                          String picUrl =
-                              "https://xiaomi.itying.com/${controller.bestSellingSwiperList[index].pic}";
                           return Image.network(
-                            picUrl.replaceAll("\\", "/"),
+                            HttpsClient.replaeUri(
+                                controller.bestSellingSwiperList[index].pic),
                             fit: BoxFit.fill,
                           );
                         },
@@ -243,7 +246,7 @@ class HomeView extends GetView<HomeController> {
                                     SwiperPluginConfig config) {
                               return ConstrainedBox(
                                 constraints: BoxConstraints.expand(
-                                    height: Screenadapter.height(36)),
+                                    height: ScreenAdapter.height(36)),
                                 child: Row(
                                   children: <Widget>[
                                     Expanded(
@@ -261,19 +264,18 @@ class HomeView extends GetView<HomeController> {
                               );
                             })))),
                   )),
-              SizedBox(width: Screenadapter.width(20)),
+              SizedBox(width: ScreenAdapter.width(20)),
               //右侧
               Expanded(
                   flex: 1,
                   child: SizedBox(
-                    height: Screenadapter.height(738),
+                    height: ScreenAdapter.height(738),
                     child: Obx(() => Column(
                             children: controller.sellingPlist
                                 .asMap()
                                 .entries
                                 .map((entrie) {
                           var value = entrie.value;
-                          var picUrl = "https://xiaomi.itying.com/${value.pic}";
                           return Expanded(
                               flex: 1,
                               child: Container(
@@ -284,7 +286,7 @@ class HomeView extends GetView<HomeController> {
                                     0,
                                     entrie.key == 2
                                         ? 0
-                                        : Screenadapter.height(20)),
+                                        : ScreenAdapter.height(20)),
                                 child: Row(
                                   children: [
                                     Expanded(
@@ -292,26 +294,26 @@ class HomeView extends GetView<HomeController> {
                                       child: Column(
                                         children: [
                                           SizedBox(
-                                              height: Screenadapter.height(20)),
+                                              height: ScreenAdapter.height(20)),
                                           Text("${value.title}",
                                               style: TextStyle(
                                                   fontSize:
-                                                      Screenadapter.fontsize(
+                                                      ScreenAdapter.fontSize(
                                                           38),
                                                   fontWeight: FontWeight.bold)),
                                           SizedBox(
-                                              height: Screenadapter.height(20)),
+                                              height: ScreenAdapter.height(20)),
                                           Text("${value.subTitle}",
                                               style: TextStyle(
                                                   fontSize:
-                                                      Screenadapter.fontsize(
+                                                      ScreenAdapter.fontSize(
                                                           28))),
                                           SizedBox(
-                                              height: Screenadapter.height(20)),
+                                              height: ScreenAdapter.height(20)),
                                           Text("￥${value.price}元",
                                               style: TextStyle(
                                                   fontSize:
-                                                      Screenadapter.fontsize(
+                                                      ScreenAdapter.fontSize(
                                                           34)))
                                         ],
                                       ),
@@ -320,9 +322,9 @@ class HomeView extends GetView<HomeController> {
                                       flex: 2,
                                       child: Padding(
                                         padding: EdgeInsets.all(
-                                            Screenadapter.height(8)),
+                                            ScreenAdapter.height(8)),
                                         child: Image.network(
-                                            picUrl.replaceAll("\\", "/"),
+                                            HttpsClient.replaeUri(value.pic),
                                             fit: BoxFit.cover),
                                       ),
                                     )
@@ -343,10 +345,10 @@ class HomeView extends GetView<HomeController> {
       children: [
         Padding(
             padding: EdgeInsets.fromLTRB(
-                Screenadapter.width(30),
-                Screenadapter.height(40),
-                Screenadapter.width(30),
-                Screenadapter.height(20)),
+                ScreenAdapter.width(30),
+                ScreenAdapter.height(40),
+                ScreenAdapter.width(30),
+                ScreenAdapter.height(20)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -354,72 +356,77 @@ class HomeView extends GetView<HomeController> {
                 Text("省心优惠",
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: Screenadapter.fontsize(46))),
+                        fontSize: ScreenAdapter.fontSize(46))),
                 Text("全部优惠 >",
-                    style: TextStyle(fontSize: Screenadapter.fontsize(38)))
+                    style: TextStyle(fontSize: ScreenAdapter.fontSize(38)))
               ],
             )),
         Obx(() => Container(
-              padding: EdgeInsets.all(Screenadapter.width(26)),
+              padding: EdgeInsets.all(ScreenAdapter.width(26)),
               color: const Color.fromRGBO(246, 246, 246, 1),
               child: MasonryGridView.count(
                 crossAxisCount: 2,
-                mainAxisSpacing: Screenadapter.width(26),
-                crossAxisSpacing: Screenadapter.width(26),
+                mainAxisSpacing: ScreenAdapter.width(26),
+                crossAxisSpacing: ScreenAdapter.width(26),
                 itemCount: controller.bestPlist.length, //注意
                 shrinkWrap: true, //收缩，让元素宽度自适应
                 physics: const NeverScrollableScrollPhysics(), //禁止滑动
                 itemBuilder: (context, index) {
-                  var picUrl =
-                      "https://xiaomi.itying.com/${controller.bestPlist[index].sPic}";
-                  return Container(
-                    padding: EdgeInsets.all(Screenadapter.width(20)),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white,
-                    ),
-                    child: Column(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(Screenadapter.width(10)),
-                          child: Image.network(
-                            picUrl.replaceAll("\\", "/"),
-                            fit: BoxFit.cover,
+                  return InkWell(
+                    onTap: () {
+                      Get.toNamed("/product-content",
+                          arguments: {"id": controller.bestPlist[index].sId});
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(ScreenAdapter.width(20)),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(ScreenAdapter.width(10)),
+                            child: Image.network(
+                              HttpsClient.replaeUri(
+                                  controller.bestPlist[index].sPic),
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(Screenadapter.width(10)),
-                          width: double.infinity,
-                          child: Text(
-                            "${controller.bestPlist[index].title}",
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                                fontSize: Screenadapter.fontsize(42),
-                                fontWeight: FontWeight.bold),
+                          Container(
+                            padding: EdgeInsets.all(ScreenAdapter.width(10)),
+                            width: double.infinity,
+                            child: Text(
+                              "${controller.bestPlist[index].title}",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                  fontSize: ScreenAdapter.fontSize(42),
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(Screenadapter.width(10)),
-                          width: double.infinity,
-                          child: Text(
-                            "${controller.bestPlist[index].subTitle}",
-                            textAlign: TextAlign.start,
-                            style:
-                                TextStyle(fontSize: Screenadapter.fontsize(32)),
+                          Container(
+                            padding: EdgeInsets.all(ScreenAdapter.width(10)),
+                            width: double.infinity,
+                            child: Text(
+                              "${controller.bestPlist[index].subTitle}",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                  fontSize: ScreenAdapter.fontSize(32)),
+                            ),
                           ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(Screenadapter.width(10)),
-                          width: double.infinity,
-                          child: Text(
-                            "¥${controller.bestPlist[index].price}",
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                                fontSize: Screenadapter.fontsize(32),
-                                fontWeight: FontWeight.bold),
+                          Container(
+                            padding: EdgeInsets.all(ScreenAdapter.width(10)),
+                            width: double.infinity,
+                            child: Text(
+                              "¥${controller.bestPlist[index].price}",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                  fontSize: ScreenAdapter.fontSize(32),
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -445,9 +452,6 @@ class HomeView extends GetView<HomeController> {
             _banner2(),
             _bestSelling(),
             _bestGoods(),
-            SizedBox(
-              height: 100,
-            )
           ],
         ));
   }

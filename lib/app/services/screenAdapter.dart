@@ -1,27 +1,27 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-// 对flutter_screenutil进行二次封装
+class ScreenAdapter{
 
-class Screenadapter {
-  static width(num v) {
+  static width(num v){
     return v.w;
   }
-
-  static height(num v) {
+  static height(num v){
     return v.h;
   }
-
-  static fontsize(num v) {
+  static fontSize(num v){
     return v.sp;
   }
-
-  static getScreenWidht(num v) {
-    return ScreenUtil().screenWidth;
-    // return 1.sw;
+  static getScreenWidth(){
+      // return  ScreenUtil().screenWidth;
+      return 1.sw;
+  }
+  static getScreenHeight  (){
+      // return  ScreenUtil().screenHeight;
+      return 1.sh;
   }
 
-  static getScreenHeight(num v) {
-    return ScreenUtil().screenHeight;
-    // return 1.sh
+  static getStatusBarHeight (){
+    return ScreenUtil().statusBarHeight;  //状态栏高度 刘海屏会更高
   }
+
 }

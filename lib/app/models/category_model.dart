@@ -32,17 +32,16 @@ class CategoryItemModel {
   int? goProduct;
   String? productId;
 
-  CategoryItemModel({
-    this.sId,
-    this.title,
-    this.status,
-    this.pic,
-    this.pid,
-    this.sort,
-    this.isBest,
-    this.goProduct,
-    this.productId,
-  });
+  CategoryItemModel(
+      {this.sId,
+      this.title,
+      this.status,
+      this.pic,
+      this.pid,
+      this.sort,
+      this.isBest,
+      this.goProduct,
+      this.productId});
 
   CategoryItemModel.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];

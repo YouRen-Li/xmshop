@@ -1,4 +1,3 @@
-//轮播图模型类
 class FocusModel {
   List<FocusItemModel>? result;
 
@@ -31,7 +30,6 @@ class FocusItemModel {
 
   FocusItemModel({this.sId, this.title, this.status, this.pic, this.url});
 
-  //构造函数
   FocusItemModel.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     title = json['title'];
