@@ -1,20 +1,20 @@
-import 'package:dio/dio.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:xmshop/app/models/category_model.dart';
-import 'package:xmshop/app/models/focus_model.dart';
-import 'package:xmshop/app/models/plist_model.dart';
+import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+import '../../../models/category_model.dart';
+import '../../../models/focus_model.dart';
+import '../../../models/plist_model.dart';
 
 class HomeController extends GetxController {
+  //浮动导航开关
+  RxBool flag = false.obs;
+  //ScrollController
   final ScrollController scrollController = ScrollController();
-  //接口列表
-  RxList<FocusItemModel> swiperList = <FocusItemModel>[].obs;
+  RxList<FocusItemModel> swiperList = <FocusItemModel>[].obs; //注意需要定义成响应式数据
   RxList<FocusItemModel> bestSellingSwiperList = <FocusItemModel>[].obs;
   RxList<CategoryItemModel> categoryList = <CategoryItemModel>[].obs;
-  RxList<PlistlItemModel> sellingPlist = <PlistlItemModel>[].obs;
-
-  //浮动导航的样式
-  final flag = false.obs;
+  RxList<PlistItemModel> sellingPlist = <PlistItemModel>[].obs;
+  RxList<PlistItemModel> bestPlist = <PlistItemModel>[].obs;
 
   @override
   void onInit() {
@@ -22,73 +22,79 @@ class HomeController extends GetxController {
     scrollControllerListener();
     //请求接口
     getFocusData();
-    // 获取分类数据
+    //获取分类数据
     getCategoryData();
-    //获取热销甄选轮播图数据
+    //获取热销臻选里面的轮播图
     getSellingSwiperData();
-    //获取热销甄选里面的商品数据
-    getsellingPlistData();
+    //获取热销臻选里面的商品
+    getSellingPlistData();
+    // 获取热门商品
+    getBestPlistData();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  // 滚动到一定距离以后搜索框样式改变
-  scrollControllerListener() {
+  //监听滚动条滚动事件
+  void scrollControllerListener() {
     scrollController.addListener(() {
-      //监听滚动的距离
       if (scrollController.position.pixels > 10) {
-        if (flag == false) flag.value = true;
-      } else if (scrollController.position.pixels < 10) {
-        if (flag == true) flag.value = false;
+        if (flag.value == false) {
+          print("position.pixels > 10");
+          flag.value = true;
+          update();
+        }
+      }
+      if (scrollController.position.pixels < 10) {
+        if (flag.value == true) {
+          print("position.pixels < 10");
+          flag.value = false;
+          update();
+        }
       }
     });
   }
 
-  // 获取轮播图
+  //获取轮播图数据
   getFocusData() async {
-    var response = await Dio().get('https://miapp.itying.com/api/focus');
+    var response = await Dio().get("https://miapp.itying.com/api/focus");
+
     var focus = FocusModel.fromJson(response.data);
+
     swiperList.value = focus.result!;
-    for (int i = 0; i < swiperList.length; i++) {
-      swiperList[i].pic = "https://miapp.itying.com/${swiperList[i].pic}"
-          .replaceAll("\\", '/');
-    }
-  }
 
-  // 获取热销甄选里面的轮播图
+    update();
+  }
+  //获取热销臻选里面的轮播图
+
   getSellingSwiperData() async {
-    var response = await Dio().get(
-      'https://miapp.itying.com/api/focus?position=2',
-    );
-    var SellingSwiper = FocusModel.fromJson(response.data);
-    bestSellingSwiperList.value = SellingSwiper.result!;
+    var response =
+        await Dio().get("https://miapp.itying.com/api/focus?position=2");
+    var sellingSwiper = FocusModel.fromJson(response.data);
+    bestSellingSwiperList.value = sellingSwiper.result!;
+    update();
   }
 
-  // 获取热销甄选里面的商品数据
-  getsellingPlistData() async {
-    var response = await Dio().get(
-      'https://miapp.itying.com/api/plist?is_hot=1&pageSize=3',
-    );
+//获取热销臻选里面的商品数据
+  getSellingPlistData() async {
+    var response = await Dio()
+        .get("https://miapp.itying.com/api/plist?is_hot=1&pageSize=3");
     var plist = PlistModel.fromJson(response.data);
     sellingPlist.value = plist.result!;
+    update();
   }
 
-  // 获取分类
+  //获取分类数据
   getCategoryData() async {
-    var response = await Dio().get('https://miapp.itying.com/api/bestCate');
+    var response = await Dio().get("https://miapp.itying.com/api/bestCate");
     var category = CategoryModel.fromJson(response.data);
     categoryList.value = category.result!;
-    for (int i = 0; i < categoryList.length; i++) {
-      categoryList[i].pic = "https://miapp.itying.com/${categoryList[i].pic}"
-          .replaceAll("\\", '/'); //把\转换为/，需要转义所以是\\
-    }
+    update();
+  }
+
+  //获取热门商品数据
+  getBestPlistData() async {
+    var response =
+        await Dio().get("https://miapp.itying.com/api/plist?is_best=1");
+    var plist = PlistModel.fromJson(response.data);
+    bestPlist.value = plist.result!;
+    update();
   }
 }

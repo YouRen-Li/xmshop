@@ -1,13 +1,13 @@
 class PlistModel {
-  List<PlistlItemModel>? result;
+  List<PlistItemModel>? result;
 
   PlistModel({this.result});
 
   PlistModel.fromJson(Map<String, dynamic> json) {
     if (json['result'] != null) {
-      result = <PlistlItemModel>[];
+      result = <PlistItemModel>[];
       json['result'].forEach((v) {
-        result?.add(PlistlItemModel.fromJson(v));
+        result?.add(PlistItemModel.fromJson(v));
       });
     }
   }
@@ -21,7 +21,7 @@ class PlistModel {
   }
 }
 
-class PlistlItemModel {
+class PlistItemModel {
   String? sId;
   String? title;
   String? cid;
@@ -30,17 +30,16 @@ class PlistlItemModel {
   String? subTitle;
   String? sPic;
 
-  PlistlItemModel({
-    this.sId,
-    this.title,
-    this.cid,
-    this.price,
-    this.pic,
-    this.subTitle,
-    this.sPic,
-  });
+  PlistItemModel(
+      {this.sId,
+      this.title,
+      this.cid,
+      this.price,
+      this.pic,
+      this.subTitle,
+      this.sPic});
 
-  PlistlItemModel.fromJson(Map<String, dynamic> json) {
+  PlistItemModel.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     title = json['title'];
     cid = json['cid'];
